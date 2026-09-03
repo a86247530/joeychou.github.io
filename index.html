@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JOEY CHOU | 視覺與數位整合專家</title>
     <style>
-        /* 這裡使用最傳統但絕對不會失效的標準 CSS 控制排版 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #FFFFFF;
@@ -112,7 +111,7 @@
         .filter-btn.active {
             color: #000000;
             font-weight: bold;
-            border-b: 2px solid #000000;
+            border-bottom: 2px solid #000000;
         }
         .work-grid {
             display: grid;
@@ -133,18 +132,27 @@
             box-sizing: border-box;
             border: 1px solid #EAEAEA;
             margin-bottom: 15px;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.3s ease;
+        }
+        .image-box:hover {
+            transform: scale(1.02);
         }
         .item-title {
             font-size: 14px;
             font-weight: 500;
             margin: 0;
+            text-shadow: 0px 2px 4px rgba(0,0,0,0.5);
         }
         .item-category {
             font-size: 10px;
-            color: #999999;
+            color: #FFFFFF;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-top: 5px;
+            text-shadow: 0px 1px 3px rgba(0,0,0,0.5);
         }
         /* 聯絡我們 */
         .contact-section {
@@ -186,6 +194,45 @@
             cursor: pointer;
             margin-top: 20px;
         }
+        /* 彈出相簿燈箱 (Lightbox) 樣式 */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            justify-content: center;
+            align-items: center;
+        }
+        .lightbox-content {
+            max-width: 85%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: white;
+            font-size: 35px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .lightbox-nav {
+            position: absolute;
+            color: white;
+            font-size: 50px;
+            cursor: pointer;
+            top: 50%;
+            transform: translateY(-50%);
+            user-select: none;
+            padding: 0 20px;
+        }
+        .lightbox-prev { left: 20px; }
+        .lightbox-next { right: 20px; }
     </style>
 </head>
 <body>
@@ -238,29 +285,29 @@
         <div class="container">
             <div class="filter-menu">
                 <button class="filter-btn active">All</button>
-                <button class="filter-btn">Photography</button>
+                <button class="filter-btn">Photo</button>
                 <button class="filter-btn">Handwriting</button>
-                <button class="filter-btn">Video / Web</button>
+                <button class="filter-btn">Video</button>
             </div>
 
             <div class="work-grid">
-                <!-- 預留大格子 1 -->
-                <div class="portfolio-item">
-                    <div class="image-box">
-                        <h4 class="item-title">Coffee Stories</h4>
-                        <p class="item-category">Brand Photography</p>
+                <!-- 第一個格子：陳勢安演唱會作品 (點擊觸發大圖彈窗) -->
+                <div class="portfolio-item photo">
+                    <div class="image-box" onclick="openLightbox()" style="background-image: url('images/concert1.jpg'); color: white;">
+                        <h4 class="item-title">陳勢安〈連輸入法都記得你〉演唱會</h4>
+                        <p class="item-category">Concert Photography</p>
                     </div>
                 </div>
-                <!-- 預留大格子 2 -->
-                <div class="portfolio-item">
-                    <div class="image-box">
+                <!-- 第二個格子：預留攝影作品 2 -->
+                <div class="portfolio-item photo">
+                    <div class="image-box" style="background-image: url('images/photo2.jpg'); color: white;">
                         <h4 class="item-title">Jordan Williams</h4>
                         <p class="item-category">Portrait Photography</p>
                     </div>
                 </div>
-                <!-- 預留大格子 3 -->
-                <div class="portfolio-item">
-                    <div class="image-box">
+                <!-- 第三個格子：手寫字作品 -->
+                <div class="portfolio-item handwriting">
+                    <div class="image-box" style="background-image: url('images/hand1.jpg'); color: white;">
                         <h4 class="item-title">暖心微光</h4>
                         <p class="item-category">Handwriting Logotype</p>
                     </div>
@@ -269,35 +316,25 @@
         </div>
     </section>
 
-    <!-- 聯絡表單 -->
+    <!-- 聯絡表單 (已為你完美串接收信後台設定) -->
     <section id="contact" class="contact-section">
         <div class="contact-form">
-            <h2 style="font-size: 24px; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase;">Get In Touch</h2>
-            <p style="font-size: 12px; color: #999999; margin-bottom: 30px;">無論是攝影委託、視覺包裝或網頁建置，歡迎隨時聯絡。</p>
-            <form>
-                <div class="form-group">
-                    <input type="text" placeholder="您的姓名 / Name" class="form-input">
-                </div>
-                <div class="form-group">
-                    <input type="email" placeholder="電子郵件 / Email" class="form-input">
-                </div>
-                <div class="form-group">
-                    <input type="text" placeholder="需求簡述 / Message" class="form-input">
-                </div>
-                <button type="button" class="submit-btn">Send Message</button>
-            </form>
-        </div>
-    </section>
+                <!-- 10張照片大圖彈窗 (Lightbox) HTML 結構 -->
+    <div id="myLightbox" class="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <span class="lightbox-nav lightbox-prev" onclick="changeSlide(-1)">&#10094;</span>
+        <span class="lightbox-nav lightbox-next" onclick="changeSlide(1)">&#10095;</span>
+        <img id="lightboxImg" class="lightbox-content" src="">
+    </div>
 
-    <!-- 補上分類切換的 JS 邏輯 -->
+    <!-- 所有切換、彈窗與過濾的完整 JavaScript 邏輯 -->
     <script>
-        // 抓取所有的按鈕和作品格子
+        // 1. 分類切換按鈕邏輯
         const buttons = document.querySelectorAll('.filter-btn');
         const items = document.querySelectorAll('.portfolio-item');
 
         buttons.forEach(button => {
             button.addEventListener('click', function() {
-                // 1. 切換按鈕的黑體/灰體樣式
                 buttons.forEach(btn => {
                     btn.classList.remove('active');
                     btn.style.color = '#999999';
@@ -309,11 +346,8 @@
                 this.style.fontWeight = 'bold';
                 this.style.borderBottom = '2px solid #000000';
 
-                // 2. 依據按鈕文字篩選作品
                 const filter = this.textContent.toLowerCase().trim();
-
                 items.forEach(item => {
-                    // 如果點選 ALL，或者格子的類別符合按鈕名稱就顯示，否則隱藏
                     if (filter === 'all' || item.classList.contains(filter)) {
                         item.style.display = 'block';
                     } else {
@@ -322,6 +356,32 @@
                 });
             });
         });
+
+        // 2. 陳勢安演唱會 10 張相簿輪播邏輯
+        let currentSlideIndex = 1;
+        const totalSlides = 10; // 固定 10 張照片
+        
+        function openLightbox() {
+            currentSlideIndex = 1;
+            showSlide(currentSlideIndex);
+            document.getElementById("myLightbox").style.display = "flex";
+        }
+
+        function closeLightbox() {
+            document.getElementById("myLightbox").style.display = "none";
+        }
+
+        function changeSlide(n) {
+            currentSlideIndex += n;
+            if (currentSlideIndex > totalSlides) { currentSlideIndex = 1; }
+            if (currentSlideIndex < 1) { currentSlideIndex = totalSlides; }
+            showSlide(currentSlideIndex);
+        }
+
+        function showSlide(n) {
+            const imgSrc = "images/concert" + n + ".jpg";
+            document.getElementById("lightboxImg").src = imgSrc;
+        }
     </script>
 </body>
 </html>

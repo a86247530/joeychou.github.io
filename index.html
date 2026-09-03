@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JOEY CHOU | 視覺與數位整合專家</title>
     <style>
-        /* 基礎全站樣式與極簡設定 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #FFFFFF;
@@ -19,6 +18,7 @@
             margin: 0 auto;
             padding: 0 40px;
         }
+        /* 導覽列 */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -39,6 +39,7 @@
             margin-left: 30px;
             letter-spacing: 1px;
         }
+        /* Banner 區塊 */
         .hero {
             text-align: center;
             padding: 100px 20px;
@@ -65,6 +66,7 @@
             margin: 0 auto;
             line-height: 1.6;
         }
+        /* 服務項目區塊 */
         .services-section {
             background-color: #FAFAFA;
             border-top: 1px solid #EEEEEE;
@@ -86,6 +88,7 @@
             color: #666666;
             line-height: 1.6;
         }
+        /* 作品集區塊 */
         .work-section {
             padding: 100px 0;
         }
@@ -151,6 +154,7 @@
             margin-top: 5px;
             text-shadow: 0px 1px 3px rgba(0,0,0,0.5);
         }
+        /* 聯絡我們 */
         .contact-section {
             background-color: #111111;
             color: #FFFFFF;
@@ -190,6 +194,7 @@
             cursor: pointer;
             margin-top: 20px;
         }
+        /* 彈出相簿燈箱 (Lightbox) 樣式 */
         .lightbox {
             display: none;
             position: fixed;
@@ -232,6 +237,7 @@
 </head>
 <body>
 
+    <!-- 導覽列 -->
     <header class="navbar">
         <div class="logo">JOEY CHOU</div>
         <nav class="nav-links">
@@ -241,6 +247,7 @@
         </nav>
     </header>
 
+    <!-- 主標題主視覺區 -->
     <main class="container">
         <section class="hero">
             <span class="hero-sub">Visual & Digital Portfolio</span>
@@ -249,6 +256,7 @@
         </section>
     </main>
 
+    <!-- 核心服務項目 -->
     <section id="services" class="services-section">
         <div class="container">
             <div class="services-grid">
@@ -272,6 +280,7 @@
         </div>
     </section>
 
+    <!-- 作品集相片牆 -->
     <section id="work" class="work-section">
         <div class="container">
             <div class="filter-menu">
@@ -282,4 +291,99 @@
             </div>
 
             <div class="work-grid">
+                <!-- 第一個格子：陳勢安演唱會作品 (點擊觸發大圖彈窗) -->
                 <div class="portfolio-item photo">
+                    <div class="image-box" onclick="openLightbox()" style="background-image: url('images/concert1.jpg'); color: white;">
+                        <h4 class="item-title">陳勢安〈連輸入法都記得你〉演唱會</h4>
+                        <p class="item-category">Concert Photography</p>
+                    </div>
+                </div>
+                                <!-- 第二個格子：手寫字視覺作品 -->
+                                <div class="portfolio-item handwriting">
+                                    <div class="image-box" style="background-image: url('images/hand1.jpg'); color: white;">
+                                        <h4 class="item-title">客製品牌標準字設計</h4>
+                                        <p class="item-category">Handwriting Logotype</p>
+                                    </div>
+                                </div>
+                
+                                <!-- 第三個格子：影音剪輯作品 -->
+                                <div class="portfolio-item video">
+                                    <div class="image-box" style="background-image: url('images/video1.jpg'); color: white;">
+                                        <h4 class="item-title">自媒體短影音剪輯與調色</h4>
+                                        <p class="item-category">Video Editing & Motion</p>
+                                    </div>
+                                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- 聯絡表單 (已為你完美串接收信後台設定) -->
+    <section id="contact" class="contact-section">
+        <div class="contact-form">
+                <!-- 10張照片大圖彈窗 (Lightbox) HTML 結構 -->
+    <div id="myLightbox" class="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <span class="lightbox-nav lightbox-prev" onclick="changeSlide(-1)">&#10094;</span>
+        <span class="lightbox-nav lightbox-next" onclick="changeSlide(1)">&#10095;</span>
+        <img id="lightboxImg" class="lightbox-content" src="">
+    </div>
+
+    <!-- 所有切換、彈窗與過濾的完整 JavaScript 邏輯 -->
+    <script>
+        // 1. 分類切換按鈕邏輯
+        const buttons = document.querySelectorAll('.filter-btn');
+        const items = document.querySelectorAll('.portfolio-item');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                buttons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.style.color = '#999999';
+                    btn.style.fontWeight = 'normal';
+                    btn.style.borderBottom = 'none';
+                });
+                this.classList.add('active');
+                this.style.color = '#000000';
+                this.style.fontWeight = 'bold';
+                this.style.borderBottom = '2px solid #000000';
+
+                const filter = this.textContent.toLowerCase().trim();
+                items.forEach(item => {
+                    if (filter === 'all' || item.classList.contains(filter)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // 2. 陳勢安演唱會 10 張相簿輪播邏輯
+        let currentSlideIndex = 1;
+        const totalSlides = 10; // 固定 10 張照片
+        
+        function openLightbox() {
+            currentSlideIndex = 1;
+            showSlide(currentSlideIndex);
+            document.getElementById("myLightbox").style.display = "flex";
+        }
+
+        function closeLightbox() {
+            document.getElementById("myLightbox").style.display = "none";
+        }
+
+        function changeSlide(n) {
+            currentSlideIndex += n;
+            if (currentSlideIndex > totalSlides) { currentSlideIndex = 1; }
+            if (currentSlideIndex < 1) { currentSlideIndex = totalSlides; }
+            showSlide(currentSlideIndex);
+        }
+
+        function showSlide(n) {
+            const imgSrc = "images/concert" + n + ".jpg";
+            document.getElementById("lightboxImg").src = imgSrc;
+        }
+    </script>
+</body>
+</html>
